@@ -243,7 +243,7 @@ print(arr)
 # Build Heap, Time: O(n * log(n)), Space: O(n)
 nums = [1, 3, 4, 2, 5, 2, 4, 1, 21]
 heap = []
-for num in nums:
+for num in nums: # inefizienter als heap build O(n)
     heapq.heappush(heap, num)
     print(heap)
 
