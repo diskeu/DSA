@@ -62,3 +62,53 @@ class min_Heap():
             val = self.pop_Top()
             new[i] = val
         return new
+    
+
+def heapify(arr, i, n):
+    largest = i # index
+    left = 2 * i + 1 # index
+    right = 2 * i + 2 # index
+    # n = length of arr
+
+    if right < n and arr[right] > arr[largest]: largest = right # index richtig und links ist größer als largest
+    if left < n and arr[left] > arr[largest]: largest = left # if left = n ! error
+
+    if largest != i:
+        arr[i], arr[largest] =  arr[largest], arr[i] # largest bleibt index von links oder rechts
+        heapify(arr, largest, n) # recursiv
+    return
+
+def heapify_efficient(arr, i, n): # T bleibt gleich, S: O(1) gleich viele pointer in der iteration
+    largest = i # index
+    while True:
+        prev_Largest = largest
+        left = 2 * largest + 1 # index
+        right = 2 * largest + 2 # index
+        # n = length of arr
+
+        if right < n and arr[right] > arr[largest]: largest = right # index richtig und links ist größer als largest
+        if left < n and arr[left] > arr[largest]: largest = left # if left = n ! error
+
+        if largest != prev_Largest: #wen schon hat sich nichts verändert
+            arr[prev_Largest], arr[largest] =  arr[largest], arr[prev_Largest] # largest bleibt index von links oder rechts
+        else: break
+
+def sort(arr):
+    # heap bauen T: O(n), S: O(log(n/2)) immer nur die elemente ab vorletzter ebene zirka im call stack | mit efficient T: O(n), S: O(1)
+    n = len(arr)
+    cur = (n - 2) // 2 # index
+    while cur >= 0: # index 0
+        heapify_efficient(arr, cur, n)
+        cur -= 1
+    # heap sortieren T: O(n * log(n)) maximal log(n) mal rekursiv aufgerufen / durchgänge S: O(log(n)) | mit efficient T: O(n * log(n)), S: O(1)
+    for i in range(n-1, 0, -1): # letzter wert ist schon sortiert
+        arr[0], arr[i] = arr[i], arr[0] # i tauscht mit der root
+        heapify_efficient(arr, 0, i) # array ist nurmehr i groß und es ist immer 0 dran
+
+arr = [9, 7, 4, 5, 2, 1, 2, 1, 21, 2, 32, 3, 2, 1]
+sort(arr)
+print(arr)
+# wenn man wiederhohlt das größte element runterhohlt und die root ist ja immer das größte und dann die neue root macht was wieder das größte element ist hat man am schluss ein sortiertes array
+nums = [3,2,1,5,6,4]
+sort(nums)
+print(nums[2-1])
