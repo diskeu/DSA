@@ -143,7 +143,66 @@
 # ===========================================================================================================================================================
 # ===========================================================================================================================================================
 
-# Da die Adjecency List O(v^2) (v in dem fall anzahl an v) braucht zum herstellen (für jedes v -> vertex / node muss man anzahl an v dinge herstellen) ist die matrix nur besser wenn man viele operationen hat
-# Adjecency List braucht nur O(v) zum herstellen
+# Da die Adjecency Matrix O(v^2) (v in dem fall anzahl an v) braucht zum herstellen (für jedes v -> vertex / node muss man anzahl an v dinge herstellen) ist die matrix nur besser wenn man viele operationen hat
+# Adjecency List braucht nur O(v+e) zum herstellen
 
 # wenn [A, B] dann ist die Kante einfach die Aussage das A und B gemeinsam in einer Liste stehen
+
+# wenn man bei adjecency matrix bei einer reihe prüfen muss welche verbindungen es gibt müsste man durch die ganze zeile udrchgehen um zu prüfen auch wenn die zeile keine verbindungen hat
+# von einer node die edges sind ihre neighbours
+
+# Adjecency List ist am einfachsten als hashmap mit list als verbindungen# graph = {
+graph = {
+    "A": ["B"],      # A zeigt auf B
+    "B": ["C"],      # B zeigt auf C
+    "C": ["F", "D"], # C zeigt auf D und F
+    "D": ["A", "E"], # D zeigt auf A und E
+    "E": ["F"],      # E zeigt auf F
+    "F": ["C"],      # F zeigt auf C
+}
+
+# man könnte auch werte als klasse speichern jede node ist eine klassenobjekt und die verbindungen sind in einer liste von anderen klassen objekten
+class Node:
+    def __init__(self):
+        self.val = None
+        self.neighbours = []
+
+# Bei Graphen will man sie normalerweise durchgehen (traversal) man kann es zb mit einer dfs oder bfs machen
+# A → B
+# ↑   |
+# |   v
+# D ← C
+# |   |
+# v   v
+# E → F
+# Directed Graph - DFS -> Rekursiv (Call stack)
+# Depth first search probiert auf tiefe zugehen also zuerst einen pfad runterzugehen
+# zuerst in dem obigen beispiel A dann B dann C dann F, wenn man dan auf nichts weiteres stoßt geht man zurück und macht dort weiter
+# wenn es andere nodes gibt die mit F verbunden sind würde man F dann nicht nochmal durchgehen auch wenn F zb nachbern wie J und K hätte,
+# da man diese nachbern beim ersten besuch von F sowieso schon gesehen hätte
+# um zu wissen welche dieser nodes man schon gesehen hat speichert man ein hash set wo alle besuchten werte drinnen sind, hash set da man dann in O(1) überprüfen kann
+# A -> seen = [A] -> B [A, B] -> [A, B, C, F], dann C, dann D, [A, B, C, F, D], dann merkt man das man A schon gesehen hat also geht man zu E [A, B, C, F, D, E]
+# Output = A B C F D E
+# DFS besucht nur das was vom startkoten aus erreichbar ist egal ob es kanten hat oder nicht
+# Iteratives DFS mit stack funktioniert genauso
+seen = set()
+def dfs_recursiv(node, adjecency_List):
+    if node in seen: return
+    seen.add(node)
+    print(node, end=" ")
+    for vertex in adjecency_List[node]:
+        dfs_recursiv(vertex, adjecency_List)
+
+dfs_recursiv("A", graph)
+seen = set()
+def dfs_iterativ(start_Node, adjecency_List):
+    stack = [start_Node]
+    while stack:
+        cur = stack.pop()
+        if cur in seen: continue
+        seen.add(cur)
+        print(cur, end=" ")
+        for vertex in adjecency_List[cur]:
+            stack.append(vertex)
+
+dfs_iterativ("A", graph)
