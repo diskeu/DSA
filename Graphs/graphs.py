@@ -151,7 +151,7 @@
 # wenn man bei adjecency matrix bei einer reihe prüfen muss welche verbindungen es gibt müsste man durch die ganze zeile udrchgehen um zu prüfen auch wenn die zeile keine verbindungen hat
 # von einer node die edges sind ihre neighbours
 
-# Adjecency List ist am einfachsten als hashmap mit list als verbindungen# graph = {
+# Adjecency List ist am einfachsten als hashmap mit list als verbindungen
 graph = {
     "A": ["B"],      # A zeigt auf B
     "B": ["C"],      # B zeigt auf C
@@ -183,10 +183,10 @@ class Node:
 # um zu wissen welche dieser nodes man schon gesehen hat speichert man ein hash set wo alle besuchten werte drinnen sind, hash set da man dann in O(1) überprüfen kann
 # A -> seen = [A] -> B [A, B] -> [A, B, C, F], dann C, dann D, [A, B, C, F, D], dann merkt man das man A schon gesehen hat also geht man zu E [A, B, C, F, D, E]
 # Output = A B C F D E
-# DFS besucht nur das was vom startkoten aus erreichbar ist egal ob es kanten hat oder nicht
+# DFS besucht nur das was vom startknoten aus erreichbar ist egal ob es kanten hat oder nicht
 # Iteratives DFS mit stack funktioniert genauso
 seen = set()
-def dfs_recursiv(node, adjecency_List):
+def dfs_recursiv(node, adjecency_List): # Time Complexity: O(V + E) -> für alle erreichbaren minimal eine operationund alle edges werden durchgangen Space Complextiy: O(v) alle verticies werden einmal in seen gespeichert und der längste weg kann maximal O(v) im call stack speichern wie zb bei linked list
     if node in seen: return
     seen.add(node)
     print(node, end=" ")
@@ -194,8 +194,9 @@ def dfs_recursiv(node, adjecency_List):
         dfs_recursiv(vertex, adjecency_List)
 
 dfs_recursiv("A", graph)
-seen = set()
-def dfs_iterativ(start_Node, adjecency_List):
+def dfs_iterativ(start_Node, adjecency_List): # Time complexity: O(V + E) für jeden knoteen geht man all seine nachbern durch, Space Complexity: Man speichert im stack einmal alle verticies im worst case und einmal in seen also O(v)
+    seen = set()
+    print("")
     stack = [start_Node]
     while stack:
         cur = stack.pop()
@@ -206,3 +207,25 @@ def dfs_iterativ(start_Node, adjecency_List):
             stack.append(vertex)
 
 dfs_iterativ("A", graph)
+
+# Während auf dem Stack etwas liegt heist das es gibt eine Node noch zum Processen
+
+# Auch wenn man bei DFS am stack alle nachbern von der derzeitigen node auf den stack legt geht man immer nur den pfad von einer node weiter
+# Die reihenfolge kommt darauf an in welcher reihenfolge werte gespeichert hat
+
+# In Breadth first search benutzt man wie bei binary trees queue
+def bfs(start, adjecency_list):
+    print("")
+    from collections import deque
+    queue = deque([start])
+    seen = set()
+    while queue:
+        cur = queue.popleft()
+        if cur in seen: continue # O(1)
+        print(cur, end = " ")
+        seen.add(cur)
+        for vertex in graph[cur]:
+            queue.append(vertex)
+
+bfs("A", graph)
+# Man geht nie in einem pfad tiefer als wie in einem anderen
