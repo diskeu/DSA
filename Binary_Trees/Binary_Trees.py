@@ -312,7 +312,7 @@ def check_Value(node, val):
     if node == val: return True
     return check_Value(node.left, val) or check_Value(node.right, val)
 
-print(check_Value(root))
+print(check_Value(root, 2))
     
 print("preorder stack")
 print(preorder_stack(root)) # preorderd traversal stack
@@ -329,6 +329,7 @@ print(inorder_stack(Node8)) # -> iterativ stack inordered search
 
 # !!! in order -> in_order !!!
 
+# Man speichert graphen meist in array wenn man einen vollständigen tree wie bei einen heap hat, man speichert mit objekten in unvollständigen trees wie zb bei linked lists, da man sonst zu viele nulls speichert
 # init:
 # -> Initialisierungen können als sofortige Zuweisungen begriffen werden, die unmittelbar nach/bei dem Anlegen eines Objekts im Speicher vorgenommen werden.
 # -> Alle statischen Objekte sind/werden nur einmal beim Programmstart initialisiert, und zwar typgerecht mit Null, falls keine explizite Initialisierung vorhanden ist.
