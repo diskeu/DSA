@@ -56,6 +56,7 @@
 
 # D   0   1   1   0
 # Das sich ein Computer so einen Graphen merken kann gibt es zwei möglichkeiten
+# Adjacency -> Nachbarschaft
 # 1). Adjacency Matrix -> Zeile -> Startknoten, spalte -> Zielknoten
 # 2). Adjacency List -> statt eine ganze Tabelle zu machen schreibt man einfach nur wer mit wem verbunden ist -> man spart speicher da man nur die existierenden verbindungen speichert
 
@@ -163,8 +164,8 @@ graph = {
 
 # man könnte auch werte als klasse speichern jede node ist eine klassenobjekt und die verbindungen sind in einer liste von anderen klassen objekten
 class Node:
-    def __init__(self):
-        self.val = None
+    def __init__(self, val = None):
+        self.val = val
         self.neighbours = []
 
     def __str__(self):
@@ -174,14 +175,14 @@ class Node:
         connections = [node.val for node in self.neighbours]
         return connections
     
-A = Node ('A')
-B = Node ('B')
+A = Node('A')
+B = Node('B')
 C = Node('C')
-D = Node ('D')
-A.neighbors.append(B)
-B.neighbors.append(A)
-C.neighbors.append(D)
-D.neighbors.append(C)
+D = Node('D')
+A.neighbours.append(B)
+B.neighbours.append(A)
+C.neighbours.append(D)
+D.neighbours.append(C)
 
 # Bei Graphen will man sie normalerweise durchgehen (traversal) man kann es zb mit einer dfs oder bfs machen
 # A → B
@@ -270,7 +271,10 @@ bfs("A", graph)
 # Wenn man bei einen Tree n nodes / v verticies dann sind die edges gleich n - 1, da wenn man einen connected acyclic graphen hat es nur einen weg gibt von einem ort zum anderen zu kommen darum ist es auch acyclic bei cyclic graphen würde es mehrere wege geben von einem punkt zum nächsten zu gelangen
 # bei einem undirected graph gibt es in der adecency list doppelt so viele einträge aber nicht doppelt so viele kanten da die verbindung von einer kante trotzdem eine bleibt A -- B ist genausoviel edges wie A -> B
 # bis ein graph connected ist braucht er mindestens v - 1 knoten, basis = v = 1, E = 0, bei einem vertex gibt es keine verbindungen, nach der basis dann immer v = 3, E = 2, darum hat er immer v - 1 edges
-# wenn man weniger als v - 1 vetivies hat dann ist es nicht möglich den graphen zu connecten ohne das er ein graph bleibt
+# wenn man weniger als v - 1 vetivies hat dann ist es nicht möglich den graphen zu connecten ohne das er ein connected graph bleibt
+# Um n Nodes zu verbinden, braucht man mindestens n-1 Edges.
+	# •	Weniger → Graph kann nicht verbunden sein.
+	# •	Mehr → mindestens ein Zyklus.
 
 # Array von Edges (directed) [Start -> End]
 n = 8
@@ -305,7 +309,30 @@ def convertToMatrix(arr:list) -> dict: # T: O(V^2 + E), S: O(V^2)
     return adjecencyMatrix
 
 print(convertToMatrix(arr))
-
 dfs_iterativ(0, convertToList(arr))
 dfs_recursiv(0, convertToList(arr))
 # Bei einer adjacency matrix müsste man zuerst jedem wert einen index zuordnen und die matrix immer so groß wie alle werte machen
+
+grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+
+def numIslands(grid: list[list[str]]) -> int:
+    seen = set()
+    """Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+
+    An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water."""
+    start = [0][0]
+    stack = []
+    while stack:
+        cur = stack.pop()
+        print(cur)
+        for i, vertex in enumerate(grid[cur]):
+            if vertex == 1 and i not in seen:
+                stack.append(())
+                seen.add(vertex)
+
+numIslands(grid)

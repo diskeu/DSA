@@ -103,6 +103,7 @@ def preorder_stack(root): # preordered travarsial
         if node.right: stack.append(node.right) # -> zuerst rechts da am stack aufs oberste element zugegriffen wird und es damit left ist
         if node.left: stack.append(node.left)
     return visited
+
 def pre_order(node):
     if not node: return
     print(node)
@@ -334,3 +335,9 @@ print(inorder_stack(Node8)) # -> iterativ stack inordered search
 # -> Initialisierungen können als sofortige Zuweisungen begriffen werden, die unmittelbar nach/bei dem Anlegen eines Objekts im Speicher vorgenommen werden.
 # -> Alle statischen Objekte sind/werden nur einmal beim Programmstart initialisiert, und zwar typgerecht mit Null, falls keine explizite Initialisierung vorhanden ist.
 
+# Erklärung warum bei heap sort man nicht sift up verwendet gefunden auf stack owerflow
+# The number of operations required for siftDown and siftUp is proportional to the distance the node may have to move.
+# For siftDown, it is the distance to the bottom of the tree, so siftDown is expensive for nodes at the top of the tree.
+# With siftUp, the work is proportional to the distance to the top of the tree, so siftUp is expensive for nodes at the bottom of the tree.
+# Although both operations are O(log n) in the worst case, in a heap, only one node is at the top whereas half the nodes lie in the bottom layer.
+# So it shouldn't be too surprising that if we have to apply an operation to every node, we would prefer siftDown over siftUp.
