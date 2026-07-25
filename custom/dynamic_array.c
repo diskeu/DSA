@@ -33,15 +33,15 @@ bool append(int item, struct Arr **arr) {
     return true;
 }
 
-void append_arr(struct Arr *arr, size_t n) {
+void append_arr(struct Arr **arr, size_t n) {
     for (int i = 0; i <= n; i++) {
         printf("*arr: %p\n", arr);
-        printf("Cap: %zu\n", arr->cap);
-        if (append(i, &arr) == false) {
+        printf("Cap: %zu\n", (*arr)->cap);
+        if (append(i, arr) == false) {
             return;
         }
     }
-    for (int *ptr = arr->data; ptr < arr->data+arr->i; ptr++) {
+    for (int *ptr = (*arr)->data; ptr < (*arr)->data+(*arr)->i; ptr++) {
         printf("Item: %d\n", *ptr);
     }
 }
@@ -59,6 +59,6 @@ int main() {
         .cap = cap,
         .i = 0
     };
-    append_arr(arr, 12);
+    append_arr(&arr, 12);
     free(arr);
 }
