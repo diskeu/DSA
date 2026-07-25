@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 struct Arr {
-    int cap;
-    int i;
+    size_t cap;
+    size_t i;
     int data[];
 };
 
@@ -18,33 +19,46 @@ struct Arr {
 //     return NULL;
 // }
 
-void *append(int *item, struct Arr *arr) {
-    if (arr->cap <= arr->i+1) {
-        arr = realloc(arr, sizeof(arr) + sizeof(*item) * (arr->cap*=2));
+
+bool append(int item, struct Arr **arr) {
+    if ((*arr)->cap <= ((*arr)->i+1) * sizeof((*arr)->data[0])) {
+        void *temp = realloc(*arr, sizeof(**arr) * ((*arr)->cap*=2));
+        if (temp == NULL) {
+            return false;
+        }
+        *arr = temp;
     }
-    arr->i++;
-    *(arr->data + arr->i) = *item;
-    return arr;
+    *((*arr)->data + (*arr)->i) = item;
+    (*arr)->i++;
+    return true;
 }
 
+void append_arr(struct Arr *arr, size_t n) {
+    for (int i = 0; i <= n; i++) {
+        printf("*arr: %p\n", arr);
+        printf("Cap: %zu\n", arr->cap);
+        if (append(i, &arr) == false) {
+            return;
+        }
+    }
+    for (int *ptr = arr->data; ptr < arr->data+arr->i; ptr++) {
+        printf("Item: %d\n", *ptr);
+    }
+}
 
 int main() {
     struct Arr *arr;
-    int cap;
-    arr = malloc(sizeof(*arr) + sizeof(arr->data[0]) * cap);
-    arr->cap=cap;
-    arr->i=0;
+    int item_count = 4;
+    size_t     cap = sizeof(arr->data[0]) * item_count;
 
-    arr = append(1, arr);
-    arr = append(2, arr);
-    arr = append(3, arr);
-    arr = append(4, arr);
-    arr = append(5, arr);
-    arr = append(6, arr);
-
-    for (int *ptr = arr-arr->i; arr < (arr+arr->i); ptr++) {
-        printf("Item: %d", *ptr);
+    arr = malloc(sizeof(*arr) + cap);
+    if (arr == NULL) {
+        return 1;
     }
-
+    *arr = (struct Arr) {
+        .cap = cap,
+        .i = 0
+    };
+    append_arr(arr, 12);
     free(arr);
 }
